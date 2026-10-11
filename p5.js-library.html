@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>p5.js Library Remix</title>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
+    
+    <script>
+      /* global p5 */
+      const sketch = (p) => {
+        p.setup = () => {
+          // 1. Changed the canvas size.
+          p.createCanvas(800, 500)
+          
+          // Background to dark blue
+          p.background(20, 30, 60)
+          
+          // Keeping each square centered on the mouse
+          p.rectMode(p.CENTER)
+        }
+        
+        p.draw = () => {
+          // Changed the shape color to orange.
+          p.fill(255, 160, 40)
+          
+          // Changes circles to squares
+          p.rect(p.mouseX, p.mouseY, 50, 50)
+        }
+      }
+      
+      new p5(sketch)
+    </script>
+  </body>
+</html>
