@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1.0">
+    <title>Dynamic GIF Remix</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library@1.0.1/build/nn.min.js"></script>
+    
+    <script>
+      /* global nn */
+      // Renamed the global color variables
+      let textColor, pageColor
+      
+      function setup () {
+        // Picking two random colors.
+        textColor = nn.randomColor()
+        pageColor = nn.randomColor()
+        
+        // Changed the minimum ratio from 4.5 to 3
+        while (nn.colorContrast(textColor, pageColor) < 3.0) {
+          textColor = nn.randomColor()
+        }
+        
+        // Updating the body's content and styles.
+        nn.get('body')
+          .content('Hi World Wide Web!')
+          .css({
+            color: textColor,
+            background: pageColor,
+            margin: 0,
+            overflow: 'hidden',
+            height: '100vh',
+            display: 'grid',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 72
+          })
+        
+        // Changed createGif from 100 calls to only 50 calls
+        nn.times(50, createGif)
+      }
+      
+      function createGif () {
+        // creating a random position and rotation.
+        const x = nn.random(-100, nn.width + 100)
+        const y = nn.random(-100, nn.height + 100)
+        const r = nn.random(360)
+        const c = nn.toHSL(textColor)
+        
+        // uploading my own GIF and name it my-gif.gif
+        nn.create('img')
+          .set('src', 'my-gif.gif')
+          .addTo('body')
+          .position(x, y)
+          .rotate(r)
+          .hueRotate(60 - c.h)
+          .saturate(c.s / 100)
+          .brightness(c.l / 100)
+          .css({
+            cursor: 'grab',
+            userSelect: 'none',
+            transition: 'all 1.5s ease-out'
+          })
+          .on('mouseover', async function () {
+            this.scale(3)
+            this.css('opacity', 0)
+            this.rotate(r - 180)
+            await nn.sleep(1500)
+            this.remove()
+          })
+      }
+      
+      function update () {
+        nn.getAll('img').forEach(img => img.remove())
+        setup()
+      }
+      
+      nn.on('load', setup)
+      nn.on('click', update)
+    </script>
+  </body>
+</html>
